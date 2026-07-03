@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRIGHTFRIES — Street Food with Attitude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0a0908;
+    --char:#141210;
+    --char-2:#1c1815;
+    --oren:#FF6A1A;
+    --oren-2:#FF9142;
+    --merah:#E7291C;
+    --cream:#F6EEE1;
+    --cream-dim:#B8AFA1;
+    --glow: 0 0 18px rgba(255,106,26,.55), 0 0 46px rgba(231,41,28,.25);
+    --glow-soft: 0 0 24px rgba(255,145,66,.35);
+    --radius: 18px;
+    --maxw: 1180px;
+  }
+ 
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--black);
+    color:var(--cream);
+    font-family:'Poppins', sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--oren); color:var(--black);}
+ 
+  h1,h2,h3,.display{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    line-height:1;
+  }
+ 
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+ 
+  /* subtle grain / vignette */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:9999;
+    background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.55) 100%);
+    mix-blend-mode:multiply;
+  }
+ 
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    padding:16px 30px;
+    border-radius:100px;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.3px;
+    border:none;
+    cursor:pointer;
+    transition:transform .25s cubic-bezier(.2,.9,.3,1.3), box-shadow .3s ease, filter .3s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg, var(--oren), var(--merah));
+    color:var(--cream);
+    box-shadow:var(--glow);
+  }
+  .btn-primary:hover{
+    transform:translateY(-3px) scale(1.02);
+    box-shadow:0 0 26px rgba(255,106,26,.8), 0 0 60px rgba(231,41,28,.4);
+    filter:brightness(1.08);
+  }
+  .btn-primary:active{transform:translateY(-1px) scale(.99);}
+  .btn-outline{
+    background:transparent;
+    border:1.5px solid rgba(246,238,225,.25);
+    color:var(--cream);
+    backdrop-filter:blur(6px);
+  }
+  .btn-outline:hover{
+    border-color:var(--oren-2);
+    box-shadow:var(--glow-soft);
+    transform:translateY(-2px);
+  }
+  .btn-sm{padding:11px 18px; font-size:13px;}
+  .btn-block{width:100%;}
+ 
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky; top:0; z-index:100;
+    background:rgba(10,9,8,.72);
+    backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid rgba(255,106,26,.14);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:12px;
+  }
+  .brand-mark{
+    width:42px; height:42px;
+    border-radius:12px;
+    background:linear-gradient(135deg, var(--oren), var(--merah));
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px;
+    box-shadow:var(--glow);
+    flex-shrink:0;
+  }
+  .brand-text .name{
+    font-family:'Anton', sans-serif;
+    font-size:22px;
+    letter-spacing:1px;
+    color:var(--cream);
+    text-shadow:0 0 20px rgba(255,106,26,.45);
+  }
+  .brand-text .tag{
+    font-size:11.5px;
+    color:var(--cream-dim);
+    margin-top:1px;
+    letter-spacing:.2px;
+  }
+  .nav-right{display:flex; align-items:center; gap:18px;}
+  .rating{
+    display:flex; align-items:center; gap:6px;
+    font-size:13.5px;
+    color:var(--cream-dim);
+  }
+  .rating .stars{color:var(--oren-2); letter-spacing:1px;}
+  .rating b{color:var(--cream);}
+  .nav-cta{display:none;}
+  @media(min-width:720px){.nav-cta{display:inline-flex;}}
+ 
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:74px 0 90px;
+    overflow:hidden;
+  }
+  .hero-glow{
+    position:absolute; top:-160px; left:50%; transform:translateX(-50%);
+    width:900px; height:900px;
+    background:radial-gradient(circle, rgba(255,106,26,.20), rgba(231,41,28,.08) 45%, transparent 70%);
+    pointer-events:none; z-index:0;
+  }
+  .hero-grid{
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:1fr; gap:48px; align-items:center;
+  }
+  @media(min-width:960px){
+    .hero-grid{grid-template-columns:1.05fr .95fr; gap:40px;}
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:7px 16px;
+    border-radius:100px;
+    background:rgba(255,106,26,.1);
+    border:1px solid rgba(255,106,26,.35);
+    font-size:12.5px; font-weight:600;
+    letter-spacing:.4px;
+    color:var(--oren-2);
+    margin-bottom:22px;
+  }
+  .eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--oren-2); box-shadow:0 0 8px var(--oren-2); animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+ 
+  .hero h1{
+    font-size:clamp(40px, 6.4vw, 72px);
+    color:var(--cream);
+  }
+  .hero h1 .accent{
+    background:linear-gradient(100deg, var(--oren-2), var(--merah) 70%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:none;
+    filter:drop-shadow(0 0 22px rgba(255,106,26,.35));
+  }
+  .hero p.lead{
+    margin-top:22px;
+    font-size:16.5px;
+    color:var(--cream-dim);
+    max-width:480px;
+    line-height:1.7;
+  }
+  .hero-ctas{
+    display:flex; flex-wrap:wrap; gap:14px;
+    margin-top:34px;
+  }
+  .hero-stats{
+    display:flex; gap:30px;
+    margin-top:44px;
+    flex-wrap:wrap;
+  }
+  .hero-stats .stat b{
+    display:block; font-family:'Anton',sans-serif; font-size:26px; color:var(--cream);
+  }
+  .hero-stats .stat span{
+    font-size:12px; color:var(--cream-dim); letter-spacing:.3px;
+  }
+ 
+  .hero-visual{
+    position:relative;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .plate{
+    position:relative;
+    width:100%; max-width:440px;
+    aspect-ratio:1/1;
+    border-radius:32px;
+    overflow:hidden;
+    background:linear-gradient(160deg, var(--char-2), var(--char));
+    border:1px solid rgba(255,106,26,.25);
+    box-shadow:0 30px 70px rgba(0,0,0,.6), var(--glow-soft);
+  }
+  .plate img{width:100%; height:100%; object-fit:cover;}
+  .plate::after{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(0deg, rgba(10,9,8,.65), transparent 45%);
+  }
+  .badge-float{
+    position:absolute;
+    background:rgba(20,18,16,.85);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,145,66,.35);
+    border-radius:14px;
+    padding:12px 16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+    font-size:13px;
+    display:flex; align-items:center; gap:8px;
+    animation:float 4s ease-in-out infinite;
+    z-index:2;
+  }
+  .badge-1{bottom:-14px; left:-18px; animation-delay:0s;}
+  .badge-2{top:18px; right:-16px; animation-delay:1.4s;}
+  @keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+  }
+ 
+  /* ---------- SECTION TITLES ---------- */
+  .section{padding:88px 0;}
+  .section-head{
+    text-align:center;
+    max-width:560px;
+    margin:0 auto 48px;
+  }
+  .section-head .eyebrow{margin-bottom:16px;}
+  .section-head h2{
+    font-size:clamp(30px, 4.4vw, 44px);
+    color:var(--cream);
+  }
+  .section-head p{
+    margin-top:14px; color:var(--cream-dim); font-size:15px; line-height:1.7;
+  }
+ 
+  /* ---------- INFO SECTION ---------- */
+  .info{
+    background:linear-gradient(180deg, transparent, rgba(255,106,26,.04) 20%, rgba(255,106,26,.04) 80%, transparent);
+  }
+  .info-card{
+    display:grid; grid-template-columns:1fr; gap:34px;
+    background:var(--char);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:26px;
+    padding:40px;
+    position:relative;
+    overflow:hidden;
+  }
+  @media(min-width:860px){
+    .info-card{grid-template-columns:1.1fr .9fr; gap:20px;}
+  }
+  .info-card::before{
+    content:"";
+    position:absolute; top:-100px; right:-100px;
+    width:280px; height:280px;
+    background:radial-gradient(circle, rgba(231,41,28,.18), transparent 70%);
+  }
+  .info-left h3{
+    font-size:24px; color:var(--cream); margin-bottom:14px;
+  }
+  .info-left .addr{
+    color:var(--cream-dim);
+    font-size:15px;
+    line-height:1.75;
+    max-width:420px;
+  }
+  .info-left .addr strong{color:var(--oren-2); display:block; font-size:12px; letter-spacing:1px; margin-bottom:8px; font-weight:700;}
+  .info-actions{
+    display:flex; flex-wrap:wrap; gap:12px;
+    margin-top:26px;
+  }
+  .info-right{
+    display:flex; flex-direction:column; gap:14px;
+    justify-content:center;
+  }
+  .mini-stat{
+    display:flex; align-items:center; gap:14px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);
+    padding:16px 18px;
+    border-radius:16px;
+  }
+  .mini-stat .ic{
+    width:38px; height:38px; border-radius:10px;
+    background:rgba(255,106,26,.12);
+    display:flex; align-items:center; justify-content:center;
+    font-size:17px; flex-shrink:0;
+  }
+  .mini-stat .t{font-size:13.5px; color:var(--cream); font-weight:600;}
+  .mini-stat .s{font-size:11.5px; color:var(--cream-dim);}
+ 
+  /* ---------- MENU ---------- */
+  .menu-grid{
+    display:grid; grid-template-columns:1fr; gap:26px;
+  }
+  @media(min-width:680px){.menu-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(min-width:980px){.menu-grid{grid-template-columns:repeat(3,1fr);}}
+ 
+  .card{
+    background:var(--char);
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:var(--radius);
+    overflow:hidden;
+    transition:transform .35s cubic-bezier(.2,.9,.3,1.1), box-shadow .35s ease, border-color .35s ease;
+    display:flex; flex-direction:column;
+  }
+  .card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 26px 50px rgba(0,0,0,.55), 0 0 0 1px rgba(255,106,26,.25), var(--glow-soft);
+    border-color:rgba(255,106,26,.35);
+  }
+  .card-img{
+    height:190px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card-img img{width:100%; height:100%; object-fit:cover; transition:transform .6s ease;}
+  .card:hover .card-img img{transform:scale(1.08);}
+  .card-img .tagchip{
+    position:absolute; top:12px; left:12px;
+    background:rgba(10,9,8,.75);
+    backdrop-filter:blur(6px);
+    padding:5px 12px;
+    border-radius:100px;
+    font-size:11px; font-weight:600;
+    color:var(--oren-2);
+    border:1px solid rgba(255,145,66,.3);
+  }
+  .card-body{
+    padding:22px;
+    display:flex; flex-direction:column; gap:14px; flex:1;
+  }
+  .card-body h4{
+    font-family:'Anton',sans-serif;
+    font-size:19px;
+    letter-spacing:.3px;
+    color:var(--cream);
+    text-transform:none;
+  }
+  .card-body .desc{font-size:13px; color:var(--cream-dim); line-height:1.6; flex:1;}
+  .card-foot{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px;
+  }
+  .price{
+    font-family:'Anton',sans-serif;
+    font-size:22px;
+    color:var(--oren-2);
+    text-shadow:0 0 16px rgba(255,106,26,.3);
+  }
+ 
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:60px 0 34px;
+    border-top:1px solid rgba(255,255,255,.06);
+    text-align:center;
+    position:relative;
+  }
+  footer .brand{justify-content:center; margin-bottom:10px;}
+  footer .fslogan{color:var(--cream-dim); font-size:13.5px; max-width:360px; margin:10px auto 24px;}
+  footer .fire{color:var(--oren-2); font-size:12px; letter-spacing:.4px;}
+  .footer-cta{margin:26px 0 30px;}
+ 
+  /* whatsapp floating button */
+  .fab{
+    position:fixed; bottom:22px; right:22px; z-index:200;
+    width:60px; height:60px; border-radius:50%;
+    background:linear-gradient(135deg, var(--oren), var(--merah));
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px;
+    box-shadow:var(--glow);
+    cursor:pointer;
+    border:none;
+    animation:fabPulse 2.6s infinite;
+    transition:transform .25s ease;
+  }
+  .fab:hover{transform:scale(1.08);}
+  @keyframes fabPulse{
+    0%,100%{box-shadow:0 0 18px rgba(255,106,26,.55), 0 0 46px rgba(231,41,28,.25);}
+    50%{box-shadow:0 0 30px rgba(255,106,26,.85), 0 0 60px rgba(231,41,28,.45);}
+  }
+ 
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+  }
+ 
+  :focus-visible{outline:2px solid var(--oren-2); outline-offset:3px;}
+</style>
+</head>
+<body>
+ 
+<header>
+  <div class="nav wrap">
+    <div class="brand">
+      <div class="brand-mark">🍟</div>
+      <div class="brand-text">
+        <div class="name">FRIGHTFRIES</div>
+        <div class="tag">Street Food with Attitude 🍔</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="rating"><span class="stars">★★★★★</span> <b>4.9</b>&nbsp;(37 reviews)</div>
+      <a class="btn btn-primary btn-sm nav-cta" id="navOrderBtn" href="#" target="_blank" rel="noopener">Order WhatsApp 📲</a>
+    </div>
+  </div>
+</header>
+ 
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="dot"></span> BUKA SEKARANG · JOHOR BAHRU</div>
+      <h1>Hot, Crispy &amp; <span class="accent">Viral</span> Fries in Johor Bahru</h1>
+      <p class="lead">Kentang rangup digoreng segar, disiram sos signature yang bikin ketagih. Bukan sekadar fries — ini statement. Order sekarang, sampai dalam minit.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" id="heroOrderBtn" href="#" target="_blank" rel="noopener">Order WhatsApp 📲</a>
+        <a class="btn btn-outline" href="#menu">Tengok Menu</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b>4.9★</b><span>37 REVIEWS</span></div>
+        <div class="stat"><b>10K+</b><span>FRIES SOLD</span></div>
+        <div class="stat"><b>15 MIN</b><span>AVG PICKUP</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="plate">
+        <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?q=80&w=1000&auto=format&fit=crop" alt="Crispy loaded fries FRIGHTFRIES" loading="lazy">
+      </div>
+      <div class="badge-float badge-1">🔥 <span>Best Seller — Fries Special</span></div>
+      <div class="badge-float badge-2">⚡ <span>Ready in 15 min</span></div>
+    </div>
+  </div>
+</section>
+ 
+<section class="section info" id="info">
+  <div class="wrap">
+    <div class="info-card">
+      <div class="info-left">
+        <h3>Cari Kami / Order Terus</h3>
+        <div class="addr">
+          <strong>ALAMAT PENUH</strong>
+          26, Jalan Keembong 43, Taman Johor Jaya,<br>
+          81100 Johor Bahru, Johor Darul Ta'zim
+        </div>
+        <div class="info-actions">
+          <a class="btn btn-primary btn-sm" id="directionsBtn" href="#" target="_blank" rel="noopener">📍 Directions</a>
+          <a class="btn btn-outline btn-sm" id="callBtn" href="tel:+60123956553">📞 Call Now</a>
+          <button class="btn btn-outline btn-sm" id="shareBtn">🔗 Share</button>
+        </div>
+      </div>
+      <div class="info-right">
+        <div class="mini-stat"><div class="ic">🕒</div><div><div class="t">Buka Setiap Hari</div><div class="s">12:00 PM – 11:00 PM</div></div></div>
+        <div class="mini-stat"><div class="ic">📞</div><div><div class="t">012-395 6553</div><div class="s">Call / WhatsApp order</div></div></div>
+        <div class="mini-stat"><div class="ic">📍</div><div><div class="t">Taman Johor Jaya, JB</div><div class="s">Dine-in, Takeaway &amp; Delivery</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<section class="section" id="menu">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">MENU SIGNATURE</div>
+      <h2>Pilih. Order. Rangup.</h2>
+      <p>Setiap item dimasak fresh mengikut pesanan. Klik "Order WhatsApp" untuk terus chat & confirm order.</p>
+    </div>
+ 
+    <div class="menu-grid">
+ 
+      <div class="card">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?q=80&w=800&auto=format&fit=crop" alt="Fries Special FRIGHTFRIES" loading="lazy">
+          <span class="tagchip">🔥 Best Seller</span>
+        </div>
+        <div class="card-body">
+          <h4>Fries Special</h4>
+          <p class="desc">Kentang rangup dengan sos signature FRIGHTFRIES, cheese sprinkle &amp; spicy seasoning.</p>
+          <div class="card-foot">
+            <span class="price">RM5</span>
+            <button class="btn btn-primary btn-sm order-btn" data-item="Fries Special (RM5)">Order 📲</button>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="card">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800&auto=format&fit=crop" alt="Burger Classic FRIGHTFRIES" loading="lazy">
+          <span class="tagchip">💪 Fan Favorite</span>
+        </div>
+        <div class="card-body">
+          <h4>Burger Classic</h4>
+          <p class="desc">Patty juicy dipanggang, cheese meleleh, sos rahsia dalam bun lembut fresh baked.</p>
+          <div class="card-foot">
+            <span class="price">RM8</span>
+            <button class="btn btn-primary btn-sm order-btn" data-item="Burger Classic (RM8)">Order 📲</button>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="card">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1621263764928-df1444c5e859?q=80&w=800&auto=format&fit=crop" alt="Drinks FRIGHTFRIES" loading="lazy">
+          <span class="tagchip">🧊 Sejuk-Sejuk</span>
+        </div>
+        <div class="card-body">
+          <h4>Drinks</h4>
+          <p class="desc">Minuman ais sejuk untuk padankan dengan fries &amp; burger pedas anda.</p>
+          <div class="card-foot">
+            <span class="price">RM3</span>
+            <button class="btn btn-primary btn-sm order-btn" data-item="Drinks (RM3)">Order 📲</button>
+          </div>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</section>
+ 
+<footer>
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-mark">🍟</div>
+      <div class="brand-text" style="text-align:left;">
+        <div class="name">FRIGHTFRIES</div>
+        <div class="tag">Street Food with Attitude 🍔</div>
+      </div>
+    </div>
+    <p class="fslogan">Kentang rangup, sos ganas, vibe jalanan. FRIGHTFRIES — bukan snack biasa.</p>
+    <div class="footer-cta">
+      <a class="btn btn-primary" id="footerOrderBtn" href="#" target="_blank" rel="noopener">Order WhatsApp 📲</a>
+    </div>
+    <div class="fire">Made with street food vibes 🔥 · © 2026 FRIGHTFRIES</div>
+  </div>
+</footer>
+ 
+<button class="fab" id="fabBtn" aria-label="Order via WhatsApp">📲</button>
+ 
+<script>
+  const PHONE = "60123956553";
+  const ADDRESS = "26, Jalan Keembong 43, Taman Johor Jaya, 81100 Johor Bahru, Johor Darul Ta'zim";
+ 
+  function waLink(item){
+    const msg = item
+      ? `Saya nak order ${item} dari FRIGHTFRIES`
+      : `Saya nak order dari FRIGHTFRIES`;
+    return `https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`;
+  }
+ 
+  function mapsLink(){
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADDRESS)}`;
+  }
+ 
+  // wire up generic order buttons (no specific item)
+  ["navOrderBtn","heroOrderBtn","footerOrderBtn","fabBtn"].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(el.tagName === "A"){
+      el.href = waLink();
+    } else {
+      el.addEventListener("click", ()=> window.open(waLink(), "_blank"));
+    }
+  });
+ 
+  // menu item order buttons
+  document.querySelectorAll(".order-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      window.open(waLink(btn.dataset.item), "_blank");
+    });
+  });
+ 
+  // directions
+  document.getElementById("directionsBtn").href = mapsLink();
+ 
+  // share
+  document.getElementById("shareBtn").addEventListener("click", async ()=>{
+    const shareData = {
+      title: "FRIGHTFRIES",
+      text: "FRIGHTFRIES — Street Food with Attitude 🍔 di Taman Johor Jaya, JB!",
+      url: window.location.href
+    };
+    try{
+      if(navigator.share){
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        const b = document.getElementById("shareBtn");
+        const old = b.textContent;
+        b.textContent = "✅ Link Disalin!";
+        setTimeout(()=> b.textContent = old, 1800);
+      }
+    }catch(e){ /* user cancelled share, ignore */ }
+  });
+ 
+  // scroll reveal for cards
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.style.opacity = 1;
+        entry.target.style.transform = "translateY(0)";
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:.15});
+ 
+  document.querySelectorAll(".card, .info-card").forEach(el=>{
+    el.style.opacity = 0;
+    el.style.transform = "translateY(24px)";
+    el.style.transition = "opacity .7s ease, transform .7s ease";
+    io.observe(el);
+  });
+</script>
+ 
+</body>
+</html>
